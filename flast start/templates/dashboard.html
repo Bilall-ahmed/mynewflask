@@ -1,0 +1,794 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PTG - CV Portal (Internal)</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+      crossorigin="anonymous"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+      integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <link href="style.css" />
+    <style>
+      body {
+        background-color: rgb(249, 249, 251);
+        font-family: sans-serif;
+      }
+
+      h1 {
+        font-size: 29px;
+      }
+
+      #logoutButton {
+        background-color: #930303;
+        color: rgb(240, 232, 232);
+        border: 1px solid #930303;
+        padding: 10px 20px;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s, color 0.3s;
+        position: absolute;
+        top: 20px;
+        right: 20px;
+      }
+
+      a {
+        text-decoration: none;
+      }
+
+      .card-img-top {
+        max-height: 170px;
+      }
+
+      .card:hover {
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+        transition: 0.3s;
+      }
+
+      /* .card-body a:hover {
+            text-decoration: underline;
+        } */
+
+      .card-title,
+      .card-text {
+        text-decoration: none;
+      }
+
+      .card-text {
+        font-size: 11px;
+        text-decoration: none;
+      }
+
+      .secondRow {
+        margin-top: 20px;
+        margin-bottom: 40px;
+      }
+
+      /* Default styles for normal view */
+      .com {
+        margin-left: 215px;
+        margin-bottom: 3px;
+        font-weight: 600;
+        font-family: Arial, sans-serif;
+        color: #515151;
+      }
+
+      .autoins {
+        margin-left: 215px;
+        margin-bottom: -16px;
+        font-weight: 600;
+        font-family: Arial, sans-serif;
+        color: #515151;
+      }
+
+      /* Responsive styles for tablets */
+      @media (max-width: 768px) {
+        .com,
+        .autoins {
+          margin-left: 20px;
+          font-size: 14px;
+        }
+
+        .com {
+          margin-bottom: 3px;
+        }
+
+        .autoins {
+          margin-bottom: -8px;
+        }
+      }
+
+      /* Further adjustments for mobile phones */
+      @media (max-width: 480px) {
+        .com,
+        .autoins {
+          margin-left: 10px;
+          font-size: 12px;
+        }
+
+        .com {
+          margin-bottom: 2px;
+        }
+
+        .autoins {
+          margin-bottom: -4px;
+        }
+      }
+
+      .auto {
+        margin-top: 12px;
+      }
+
+      h2 {
+        font-size: 29px;
+        text-align: start;
+        margin-left: 30px;
+      }
+
+      .modal {
+        display: none;
+        position: fixed;
+        z-index: 1;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        background-color: rgba(0, 0, 0, 0.4);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 20px;
+      }
+
+      .modal-content {
+        background-color: #fefefe;
+        padding: 10px;
+        border: 1px solid #888;
+        width: 90%;
+        max-width: 800px;
+        max-height: calc(100vh - 40px);
+        overflow-y: auto;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        border-radius: 10px;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .modal-body {
+        width: 100%;
+        padding: 10px;
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: wrap;
+      }
+
+      .options {
+        display: flex;
+        justify-content: space-between;
+        width: 100%;
+      }
+
+      .option {
+        flex: 1;
+        margin: 0 5px;
+        text-align: center;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 10px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .option:hover,
+      .option.selected {
+        background-color: #f0f0f0;
+      }
+
+      .option p {
+        text-align: start;
+      }
+
+      .option img {
+        width: 50px;
+        height: 50px;
+        margin-bottom: 10px;
+        align-items: center;
+      }
+
+      .option h3 {
+        margin-top: 10px;
+      }
+
+      /* Custom Alert Box CSS */
+      .custom-alert {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background-color: white;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        display: none;
+        z-index: 1000;
+        width: 20%;
+      }
+      .custom-alert h2 {
+        margin: 0 0 10px;
+        font-size: 18px;
+        font-weight: bold;
+      }
+      .custom-alert p {
+        margin: 0 0 20px;
+        font-size: small;
+      }
+      .custom-alert button {
+        padding: 10px 20px;
+        background-color: #007bff;
+        border: none;
+        color: white;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+      .custom-alert-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        display: none;
+        z-index: 999;
+      }
+
+      @media (max-width: 800px) {
+        h2 {
+          font-size: 24px;
+          margin-left: 20px;
+        }
+
+        .modal-content {
+          max-width: 95%;
+        }
+
+        .options {
+          flex-direction: column;
+          align-items: center;
+        }
+
+        .option {
+          flex: 0 1 100%;
+          margin-bottom: 10px;
+        }
+      }
+
+      @media (max-width: 500px) {
+        h2 {
+          font-size: 20px;
+          margin-left: 10px;
+        }
+
+        .modal-content {
+          max-width: 100%;
+          padding: 5px;
+        }
+
+        .modal-body {
+          padding: 5px;
+        }
+
+        .option {
+          padding: 5px;
+        }
+      }
+    </style>
+    <script src="./assets/security.js"></script>
+  </head>
+
+  <body>
+    <img
+      src="static/logo9.png"
+      style="padding-top: 5px; padding-left: 5px; height: 70px; width: auto"
+    />
+    <div
+      style="text-align: center; width: 100%; margin: auto; margin-top: -30px"
+    >
+      <h1 class="ptg">PTG IoT & AI/ML Capabilities (Internal)</h1>
+    </div>
+
+    <button id="logoutButton">Logout</button>
+
+    <script>
+        function logoutButton() {
+            // Remove the token from local storage
+            localStorage.removeItem('token'); // Replace 'token' with the actual key name of your token
+            
+            // Redirect to the login page
+            window.location.href = '{{ url_for("login") }}';
+        }
+    
+        // Attach the logoutButton function to the button's click event
+        document.getElementById('logoutButton').addEventListener('click', logoutButton);
+    </script>
+    
+    <!-- <script>
+      document
+        .getElementById("logoutButton")
+        .addEventListener("click", function () {
+          logout();
+        });
+      function openInNewTab(url) {
+        window
+          .open(`${url}?key=${localStorage.getItem("token")}`, "_blank")
+          .focus();
+      }
+    </script> -->
+
+    <div class="container">
+      <div class="row cards-row">
+        <div class="col-md-12">
+          <p class="com">Computer vision</p>
+        </div>
+      </div>
+      <div class="row cards-row d-flex justify-content-center">
+        <div class="col-md-6" style="width: 28rem">
+          <a
+            style="cursor: pointer"
+            onclick="openInNewTab('https://flwszstkhk.execute-api.ap-south-1.amazonaws.com/')"
+          >
+            <div class="card">
+              <img src="static/a1.png" class="card-img-top" alt="Card 1" />
+              <div class="card-body">
+                <h5
+                  class="card-title"
+                  style="color: black; text-decoration: none"
+                >
+                  Driver Distraction Monitoring
+                </h5>
+                <div style="display: flex; align-items: center">
+                  <p
+                    class="card-text"
+                    style="flex: 0 0 70%; color: black; text-decoration: none"
+                  >
+                    Utilize computer vision technology to detect and mitigate
+                    distraction, ensuring safe driving practices.
+                  </p>
+                  <a
+                    href="#"
+                    class="view-demo"
+                    onclick="showCustomAlert(event)"
+                    style="
+                      flex: 0 0 30%;
+                      display: flex;
+                      align-items: center;
+                      font-size: 14px;
+                      margin-left: 13%;
+                    "
+                  >
+                    <i
+                      class="fa-regular fa-circle-play"
+                      style="margin-right: 5px"
+                    ></i
+                    >View Demo
+                  </a>
+                </div>
+              </div>
+            </div>
+          </a>
+        </div>
+
+        <div class="custom-alert-overlay" id="customAlertOverlay"></div>
+        <div class="custom-alert" id="customAlert">
+          <h2>Unavailable!</h2>
+          <p>Video not available yet. Please check back soon!</p>
+          <button onclick="closeCustomAlert()">OK</button>
+        </div>
+
+        <div class="col-md-6" style="width: 28rem">
+          <a
+            style="cursor: pointer"
+            onclick="openInNewTab('http://human-factor-monitoring-internal.s3-website.ap-south-1.amazonaws.com')"
+          >
+            <div class="card">
+              <img src="static/a2.png" class="card-img-top" alt="Card 2" />
+              <div class="card-body">
+                <h5
+                  class="card-title"
+                  style="color: black; text-decoration: none"
+                >
+                  Human Factor Monitoring
+                </h5>
+                <div style="display: flex; align-items: center">
+                  <p
+                    class="card-text"
+                    style="flex: 0 0 70%; color: black; text-decoration: none"
+                  >
+                    Implement advanced algorithms to monitor and analyze human
+                    factors enhancing safety and performance.
+                  </p>
+                  <a
+                    href="https://human-factor-monitoring-demo.s3.ap-south-1.amazonaws.com/HumanFactorMonitoring_DemoV1+1.mp4"
+                    target="_blank"
+                    style="
+                      flex: 0 0 30%;
+                      display: flex;
+                      align-items: center;
+                      font-size: 14px;
+                      margin-left: 1%;
+                    "
+                    ><i
+                      class="fa-regular fa-circle-play"
+                      style="margin-right: 5px"
+                    ></i
+                    >View Demo</a
+                  >
+                </div>
+              </div>
+            </div>
+          </a>
+        </div>
+      </div>
+      <div class="row cards-row auto">
+        <div class="col-md-12">
+          <p class="autoins">Auto insurance</p>
+        </div>
+      </div>
+      <div class="row cards-row d-flex justify-content-center secondRow">
+        <div class="col-md-6" style="width: 28rem">
+          <a
+            style="cursor: pointer"
+            onclick="openInNewTab('https://iygfq5oz57.execute-api.ap-south-1.amazonaws.com/')"
+          >
+            <div class="card">
+              <img src="static/a3.png" class="card-img-top" alt="Card 1" />
+              <div class="card-body">
+                <h5
+                  class="card-title"
+                  style="color: black; text-decoration: none"
+                >
+                  Event Mapped Journey
+                </h5>
+                <div style="display: flex; align-items: center">
+                  <p
+                    class="card-text"
+                    style="flex: 0 0 70%; color: black; text-decoration: none"
+                  >
+                    Experience your journey visually with event-mapped trip
+                    routes, providing insights into your travel events at a
+                    glance.
+                  </p>
+                  <a
+                    href="#"
+                    class="view-demo"
+                    onclick="showCustomAlert(event)"
+                    style="
+                      flex: 0 0 30%;
+                      display: flex;
+                      align-items: center;
+                      font-size: 14px;
+                      margin-left: 13%;
+                    "
+                  >
+                    <i
+                      class="fa-regular fa-circle-play"
+                      style="margin-right: 5px"
+                    ></i
+                    >View Demo
+                  </a>
+                </div>
+              </div>
+            </div>
+          </a>
+        </div>
+
+        <div class="col-md-6" style="width: 28rem">
+          <div id="tripAnalysisCard" onclick="showModal(event)">
+            <div class="card">
+              <img src="static/a4.png" class="card-img-top" alt="Card 2" />
+              <div class="card-body" style="margin-bottom: -4%">
+                <h5
+                  class="card-title"
+                  style="color: black; text-decoration: none"
+                >
+                  Trip Analysis
+                </h5>
+                <div
+                  style="display: flex; align-items: center; margin-right: 15%"
+                >
+                  <p
+                    class="card-text"
+                    style="flex: 0 0 70%; color: black; text-decoration: none"
+                  >
+                    Analyze trip data to identify patterns and trends, enabling
+                    informed decision-making and risk management.
+                  </p>
+                  <a
+                    href="#"
+                    class="view-demo"
+                    onclick="showCustomAlert(event)"
+                    style="
+                      flex: 0 0 30%;
+                      display: flex;
+                      align-items: center;
+                      font-size: 14px;
+                      margin-left: 13%;
+                    "
+                  >
+                    <i
+                      class="fa-regular fa-circle-play"
+                      style="margin-right: 5px"
+                    ></i
+                    >View Demo
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div id="myModal" class="modal">
+          <!-- Modal content -->
+          <div class="modal-content">
+            <h2>Trip Analysis</h2>
+            <div class="modal-body">
+              <div class="options">
+                <div class="option" id="option1">
+                  <a
+                    href="https://app.fabric.microsoft.com/groups/58578a6d-2fdb-40b2-87de-e4be8fcbfba5/reports/30922305-1c1f-4760-ac41-b307bf18e4d6/ReportSection?experience=power-bi"
+                    target="_blank"
+                    style="text-decoration: none; color: inherit"
+                  >
+                    <p
+                      style="
+                        margin-bottom: 20px;
+                        text-align: center;
+                        font-size: 13px;
+                      "
+                    >
+                      Detection
+                    </p>
+                    <br />
+                    <img src="static/face.png" alt="Detection Icon" />
+                    <br />
+                    <br />
+                    <p
+                      style="
+                        text-align: start;
+                        font-weight: bold;
+                        font-size: 15px;
+                        margin-bottom: 0%;
+                      "
+                    >
+                      Sensor Raw Data
+                    </p>
+                    <p style="text-align: start; font-size: small">
+                      Unprocessed data directly collected from vehicle sensors.
+                    </p>
+                  </a>
+                </div>
+                <div class="option" id="option2">
+                  <a
+                    href="https://app.fabric.microsoft.com/groups/58578a6d-2fdb-40b2-87de-e4be8fcbfba5/reports/9e4e20b9-3ded-41fd-ab57-f0822e932df3/ReportSection8926c4066411bd459734?experience=power-bi"
+                    target="_blank"
+                    style="text-decoration: none; color: inherit"
+                  >
+                    <p
+                      style="
+                        margin-bottom: 20px;
+                        text-align: center;
+                        font-size: 13px;
+                      "
+                    >
+                      Determination
+                    </p>
+                    <br />
+                    <img src="static/lightbulb.png" alt="" />
+                    <br />
+                    <br />
+                    <p
+                      style="
+                        text-align: start;
+                        font-weight: bold;
+                        font-size: 15px;
+                        margin-bottom: 0%;
+                      "
+                    >
+                      Behaviour & distraction events
+                    </p>
+                    <p style="text-align: start; font-size: small">
+                      Instances of driver actions and distractions captured
+                      during rides.
+                    </p>
+                  </a>
+                </div>
+                <div class="option" id="option3">
+                  <a
+                    href="https://app.fabric.microsoft.com/groups/58578a6d-2fdb-40b2-87de-e4be8fcbfba5/reports/54e689d0-ad88-4d80-8d17-ee4ddb573269/ReportSection?experience=power-bi"
+                    target="_blank"
+                    style="text-decoration: none; color: inherit"
+                  >
+                    <p
+                      style="
+                        margin-bottom: 20px;
+                        text-align: center;
+                        font-size: 13px;
+                      "
+                    >
+                      Decision & Scoring
+                    </p>
+                    <br />
+                    <img src="static/bar-chart.png" alt="" />
+                    <br />
+                    <br />
+                    <p
+                      style="
+                        text-align: start;
+                        font-weight: bold;
+                        font-size: 15px;
+                        margin-bottom: 0%;
+                      "
+                    >
+                      Processed events and safety scores
+                    </p>
+                    <p style="text-align: start; font-size: small">
+                      Analyzed sensor data and quantified assessments of driving
+                      behavior.
+                    </p>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Custom Alert Box -->
+        <div
+          id="customAlertOverlay"
+          style="
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+          "
+        ></div>
+        <div
+          id="customAlert"
+          style="
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 300px;
+            padding: 20px;
+            background: white;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            z-index: 1001;
+          "
+        >
+          <h2>Unavailable!</h2>
+          <p>Video not available yet. Please check back soon!</p>
+          <button
+            onclick="closeCustomAlert()"
+            style="margin-top: 10px; padding: 5px 10px"
+          >
+            OK
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      function showCustomAlert(event) {
+        event.preventDefault(); // Prevent the default link behavior
+        event.stopPropagation(); // Stop the event from bubbling up to parent elements
+        document.getElementById("customAlert").style.display = "block";
+        document.getElementById("customAlertOverlay").style.display = "block";
+      }
+
+      function closeCustomAlert() {
+        document.getElementById("customAlert").style.display = "none";
+        document.getElementById("customAlertOverlay").style.display = "none";
+      }
+
+      function showModal(event) {
+        // Check if the click was on the "View Demo" link, if so, do not show modal
+        if (
+          event.target.classList.contains("view-demo") ||
+          event.target.closest(".view-demo")
+        ) {
+          return;
+        }
+        document.getElementById("myModal").style.display = "block";
+      }
+
+      // Close modal when clicking outside of it
+      window.onclick = function (event) {
+        if (event.target == document.getElementById("myModal")) {
+          document.getElementById("myModal").style.display = "none";
+        }
+      };
+    </script>
+
+    <script>
+      // Get the modal
+      var modal = document.getElementById("myModal");
+
+      // Get the "Trip Analysis" card
+      var tripAnalysisCard = document.getElementById("tripAnalysisCard");
+
+      // Get the options
+      var options = document.querySelectorAll(".option");
+
+      // Ensure the modal is hidden initially
+      modal.style.display = "none";
+
+      // When the user clicks the "Trip Analysis" card, open the modal
+      tripAnalysisCard.onclick = function () {
+        console.log("hello");
+        modal.style.display = "flex"; // Change to flex to open the modal
+      };
+
+      // When the user clicks anywhere outside of the modal, close it
+      window.onclick = function (event) {
+        if (event.target == modal) {
+          modal.style.display = "none"; // Close the modal
+        }
+      };
+
+      // Add click event to options
+      options.forEach((option) => {
+        option.onclick = function () {
+          options.forEach((opt) => opt.classList.remove("selected"));
+          this.classList.add("selected");
+        };
+      });
+    </script>
+
+    <script>
+      //   window.onload = function () {
+      //     if (!isLoggedIn()) {
+      //       // If not logged in, redirect to the index.html page
+      //       window.location.href = "index.html";
+      //     }
+      //   };
+
+      //   function isLoggedIn() {
+      //     return localStorage.getItem("isLoggedIn") === "true";
+      //   }
+
+      //   function logout() {
+      //     localStorage.removeItem("isLoggedIn");
+      //     window.location.href = "index.html";
+      //   }
+    </script>
+
+    <script
+      src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+      integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"
+      integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy"
+      crossorigin="anonymous"
+    ></script>
+  </body>
+</html>
